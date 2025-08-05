@@ -1,0 +1,3 @@
+from dialogs.survey_dialogs.common_dialog import survey_dialog
+from dialogs.survey_dialogs.men_dialog.dialog import men_survey_dialog
+from dialogs.survey_dialogs.women_dialog.dialog import women_survey_dialog
