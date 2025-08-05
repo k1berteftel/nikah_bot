@@ -10,11 +10,10 @@ services:
     environment:
       POSTGRES_USER: quest
       POSTGRES_PASSWORD: quest
-      POSTGRES_DB: data
+      POSTGRES_DB: nikah_data
     volumes:
       - "01-simple-alchemy-postgres:/var/lib/postgresql/data"
 
 
 volumes:
-  01-simple-alchemy-pgadmin:
   01-simple-alchemy-postgres:
