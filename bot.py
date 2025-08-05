@@ -57,11 +57,11 @@ async def main():
     scheduler: AsyncIOScheduler = AsyncIOScheduler()
     scheduler.start()
 
-    nc, js = await connect_to_nats(servers=config.nats.servers)
-    storage: NatsStorage = await NatsStorage(nc=nc, js=js).create_storage()
+    #nc, js = await connect_to_nats(servers=config.nats.servers)
+    #storage: NatsStorage = await NatsStorage(nc=nc, js=js).create_storage()
 
     bot = Bot(token=config.bot.token, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    dp = Dispatcher(storage=storage)
+    dp = Dispatcher()#storage=storage)
 
     await configurate_tables(session)
     await stars_schedulers(bot, DataInteraction(session), scheduler)
@@ -85,7 +85,7 @@ async def main():
     except Exception as e:
         logger.exception(e)
     finally:
-        await nc.close()
+        #await nc.close()
         logger.info('Connection closed')
 
 
