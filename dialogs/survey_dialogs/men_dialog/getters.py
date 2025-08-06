@@ -9,12 +9,6 @@ from config_data.config import load_config, Config
 from states.state_groups import startSG, MenSurveySG, PaymentSG, SurveySG
 
 
-rate_prices = {
-    'basic': 1000,
-    'vip': 3000
-}
-
-
 async def close_dialog(clb: CallbackQuery, widget: Button, dialog_manager: DialogManager):
     data = dialog_manager.dialog_data
     if dialog_manager.start_data:
@@ -95,17 +89,22 @@ async def channel_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
     rate = dialog_manager.dialog_data.get('rate')
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     discount = await session.get_discount()
-    price = 1000
+    if rate == 'basic':
+        price = 1000
+    else:
+        price = 3000
     if channel == 'mahram':
         channel = 'Mahram'
     elif channel == 'nikah':
         channel = 'NIKAH'
     else:
         channel = 'Mahram и NIKAH'
-        price = 1800
+        if rate == 'basic':
+            price = 1800
+        else:
+            price = 5000
     if discount:
         price = round(price - price * discount.percent / 100)
-    price = rate_prices[rate] + price
     data = {'channel': channel, 'price': price}
     data.update(dialog_manager.dialog_data)
     await dialog_manager.start(PaymentSG.payment_type, data=data)
