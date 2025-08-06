@@ -15,7 +15,10 @@ async def apply_join_request(request: ChatJoinRequest, bot: Bot, session: DataIn
     if chat_id in [channel.channel_id for channel in await session.get_accept_channels()]:
         accept_channel = await session.get_accept_channel(chat_id)
         await session.update_accept_crossed(chat_id)
-        await request.answer(accept_channel.text)
+        await bot.send_message(
+            chat_id=request.from_user.id,
+            text=accept_channel.text
+        )
         await request.approve()
     else:
         try:
