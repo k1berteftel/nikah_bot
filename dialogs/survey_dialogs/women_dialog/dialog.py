@@ -75,13 +75,22 @@ women_survey_dialog = Dialog(
         state=WomenSurveySG.get_removal
     ),
     Window(
+        Const('Введите свой номер телефона или другие контактные данные для дальнейшей с вами связи'),
+        TextInput(
+            id='get_phone',
+            on_success=getters.get_phone
+        ),
+        Back(Const('⬅️Назад'), id='back_get_removal'),
+        state=WomenSurveySG.get_phone
+    ),
+    Window(
         Const('Отправьте одно свое фото'),
         MessageInput(
             func=getters.get_photo,
             content_types=ContentType.PHOTO
         ),
         SwitchTo(Const('Пропустить'), id='skip_get_photo', state=WomenSurveySG.choose_channel),
-        Back(Const('⬅️Назад'), id='back_get_removal'),
+        Back(Const('⬅️Назад'), id='back_get_phone'),
         state=WomenSurveySG.get_photo
     ),
     Window(

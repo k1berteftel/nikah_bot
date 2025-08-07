@@ -9,6 +9,7 @@ def get_form_text(username: str | None, kwargs: dict):
     weight = kwargs.get('weight')
     children = kwargs.get("children")
     about = kwargs.get('about')
+    phone = kwargs.get('phone')
     channels = kwargs.get('channel')
 
     text = (f'Юзернейм: {username if username else "Отсутствует"}\nЗовут: {name}\nВозраст: {age}\nГород: {city}\nНациональность: {origin}\nРост: {height}\n'
@@ -21,7 +22,6 @@ def get_form_text(username: str | None, kwargs: dict):
         married = kwargs.get('married')
         prayer = kwargs.get('prayer')
         women_wishes = kwargs.get('women_wishes')
-        phone = kwargs.get('phone')
         print(kwargs.get('rate'))
         rate = 'VIP анкета' if kwargs.get('rate') == 'vip' else 'Обычная анкета'
         text += (f'Работает: {work}\nСовершает намаз: {prayer}\nСостоял/состоит в браке: {married}'
@@ -38,7 +38,7 @@ def get_form_text(username: str | None, kwargs: dict):
         removal = kwargs.get('removal')
         text += (f'Языки: {languages}\nОтношения с мужчиной: {relation}\n'
                  f'Религия: {religion}\nСовершает намаз: {prayer}\nСостояла в браке: {married}\nПойдет второй женой если '
-                 f'брат обеспеченный: {second_wife}\nГотова на переезд: {removal}'
+                 f'брат обеспеченный: {second_wife}\nГотова на переезд: {removal}\nКонтактные данные: {phone}'
                  f'\nКаналы для выставления: {channels}')
     return text
 

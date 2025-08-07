@@ -40,6 +40,7 @@ class WomenSurveySG(StatesGroup):
     is_married = State()
     is_second_wife = State()
     get_removal = State()
+    get_phone = State()
     get_photo = State()
     choose_channel = State()
 

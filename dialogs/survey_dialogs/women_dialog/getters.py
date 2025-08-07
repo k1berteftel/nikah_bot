@@ -123,6 +123,12 @@ async def removal_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
     await dialog_manager.switch_to(WomenSurveySG.get_photo, show_mode=ShowMode.DELETE_AND_SEND)
 
 
+async def get_phone(msg: Message, widget: ManagedTextInput, dialog_manager: DialogManager, text: str):
+    await msg.delete()
+    dialog_manager.dialog_data['phone'] = text
+    await dialog_manager.switch_to(WomenSurveySG.get_photo, show_mode=ShowMode.DELETE_AND_SEND)
+
+
 async def get_photo(msg: Message, widget: MessageInput, dialog_manager: DialogManager):
     await msg.delete()
     dialog_manager.dialog_data['photo_id'] = msg.photo[0].file_id
