@@ -120,7 +120,7 @@ async def removal_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
         dialog_manager.dialog_data['removal'] = 'Да'
     else:
         dialog_manager.dialog_data['removal'] = 'Нет'
-    await dialog_manager.switch_to(WomenSurveySG.get_photo, show_mode=ShowMode.DELETE_AND_SEND)
+    await dialog_manager.switch_to(WomenSurveySG.get_phone, show_mode=ShowMode.DELETE_AND_SEND)
 
 
 async def get_phone(msg: Message, widget: ManagedTextInput, dialog_manager: DialogManager, text: str):
