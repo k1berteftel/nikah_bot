@@ -63,6 +63,8 @@ async def private_menu_getter(dialog_manager: DialogManager, **kwargs):
     special_price = '30 000'
     discount = await session.get_discount()
     if discount:
+        price = price.replace(' ', '')
+        special_price = special_price.replace(' ', '')
         price = round(int(price) - int(price) * discount.percent / 100)
         special_price = round(int(special_price) - int(special_price) * discount.percent / 100)
     text = (f'<b>🔥 Эксклюзивный доступ к приватным каналам с анкетами невест 🔥</b>\n\nХотите найти свою вторую '

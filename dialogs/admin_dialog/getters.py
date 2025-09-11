@@ -58,7 +58,7 @@ async def discount_menu_getter(dialog_manager: DialogManager, **kwargs):
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     discount = await session.get_discount()
     return {
-        'discount': f'{discount}%' if discount else 'Отсутствует',
+        'discount': f'{discount.percent}%' if discount else 'Отсутствует',
         'discount_action': 'Удалить скидку' if discount else 'Добавить скидку'
     }
 
