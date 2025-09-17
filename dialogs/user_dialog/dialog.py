@@ -15,6 +15,7 @@ user_dialog = Dialog(
             SwitchTo(Const('📋Разместить анкету'), id='choose_male_switcher', state=startSG.choose_male),
             SwitchTo(Const('🔒 Купить доступ в приватные каналы'), id='private_menu_switcher', state=startSG.private_menu),
             #Url(Const('✍️Связаться с поддержкой'), id='support_url', url=Const('')),
+            Url(Const('🔗Оферта'), id='document_url', url=Const('https://telegra.ph/PUBLICHNAYA-OFERTA-09-17-4')),
             Start(Const('Админ панель'), id='admin', state=adminSG.start, when='admin')
         ),
         disable_web_page_preview=True,
