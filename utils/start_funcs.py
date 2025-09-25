@@ -14,11 +14,14 @@ async def stars_schedulers(bot: Bot, session: DataInteraction, scheduler: AsyncI
         if dif <= 0:
             await bot.ban_chat_member(channel.channel_id, user_id)
             await bot.unban_chat_member(channel.channel_id, user_id)
-            await bot.send_message(
-                chat_id=user_id,
-                text='К сожалению ваша подписка подошла к концу, вы будете удаленны из приватного канала',
-                reply_markup=get_extend_keyboard()
-            )
+            try:
+                await bot.send_message(
+                    chat_id=user_id,
+                    text='К сожалению ваша подписка подошла к концу, вы будете удаленны из приватного канала',
+                    reply_markup=get_extend_keyboard()
+                )
+            except Exception:
+                await session.set_active(user_id, 0)
             continue
         job_id = f'check_sub_{user_id}'
         job = scheduler.get_job(job_id=job_id)
