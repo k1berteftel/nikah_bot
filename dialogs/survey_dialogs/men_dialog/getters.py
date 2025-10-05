@@ -90,9 +90,9 @@ async def channel_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     discount = await session.get_discount()
     if rate == 'basic':
-        price = 1000
+        price = 2000
     else:
-        price = 3000
+        price = 5000
     if channel == 'mahram':
         channel = 'Mahram'
     elif channel == 'nikah':
@@ -100,9 +100,9 @@ async def channel_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
     else:
         channel = 'Mahram и NIKAH'
         if rate == 'basic':
-            price = 1800
+            price = 3600
         else:
-            price = 5000
+            price = 9000
     if discount:
         price = round(price - price * discount.percent / 100)
     data = {'channel': channel, 'price': price}
