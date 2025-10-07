@@ -36,8 +36,8 @@ async def start_getter(event_from_user: User, dialog_manager: DialogManager, **k
 
 async def choose_form_rate_getter(dialog_manager: DialogManager, **kwargs):
     session: DataInteraction = dialog_manager.middleware_data.get('session')
-    basic = 1000
-    vip = 3000
+    basic = 2000
+    vip = 5000
     discount = await session.get_discount()
     if discount:
         basic = round(basic - basic * discount.percent / 100)

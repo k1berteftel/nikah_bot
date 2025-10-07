@@ -65,11 +65,11 @@ async def get_photo(msg: Message, widget: MessageInput, dialog_manager: DialogMa
 async def choose_channel_getter(dialog_manager: DialogManager, **kwargs):
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     if dialog_manager.dialog_data.get('rate') == 'basic':
-        price = 1000
-        both_price = 1800
+        price = 2000
+        both_price = 3600
     else:
-        price = 3000
-        both_price = 5000
+        price = 5000
+        both_price = 9000
     discount = await session.get_discount()
     if discount:
         price = round(price - price * discount.percent / 100)
