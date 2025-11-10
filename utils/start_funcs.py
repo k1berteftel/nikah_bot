@@ -12,9 +12,9 @@ async def stars_schedulers(bot: Bot, session: DataInteraction, scheduler: AsyncI
         dif = (channel.sub_end - datetime.now()).days
         user_id = channel.user_id
         if dif <= 0:
-            await bot.ban_chat_member(channel.channel_id, user_id)
-            await bot.unban_chat_member(channel.channel_id, user_id)
             try:
+                await bot.ban_chat_member(channel.channel_id, user_id)
+                await bot.unban_chat_member(channel.channel_id, user_id)
                 await bot.send_message(
                     chat_id=user_id,
                     text='К сожалению ваша подписка подошла к концу, вы будете удаленны из приватного канала',
