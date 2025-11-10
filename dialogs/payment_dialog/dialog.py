@@ -14,8 +14,8 @@ payment_dialog = Dialog(
         Const('🏦Выберите тип оплаты'),
         Column(
             Button(Const('💳Карта'), id='card_payment_choose', on_click=getters.payment_choose),
-            Button(Const('💲Крипта'), id='crypto_payment_choose', on_click=getters.payment_choose),
-            Button(Const('⭐️Звезды'), id='stars_payment_choose', on_click=getters.payment_choose),
+            #Button(Const('💲Крипта'), id='crypto_payment_choose', on_click=getters.payment_choose),
+            #Button(Const('⭐️Звезды'), id='stars_payment_choose', on_click=getters.payment_choose),
         ),
         Cancel(Const('⬅️Назад'), id='close_dialog'),
         state=PaymentSG.payment_type
