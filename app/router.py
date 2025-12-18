@@ -35,6 +35,13 @@ router = APIRouter()
 async def payment_notification(response: Request):
     print(response.__dict__)
     print(response.query_params)
+    print(await response.json())
+    print('\n')
+    print(response.path_params)
+    print('\n')
+    print(await response.form())
+    print('\n')
+    print(await response.body())
     return
     payment = ...
     client_ip = response.client.host
