@@ -33,14 +33,12 @@ router = APIRouter()
 
 @router.post("/payment")
 async def payment_notification(response: Request):
-    print(response.__dict__)
-    print(response.query_params)
-    print('\n')
-    print(response.path_params)
-    print('\n')
-    print(await response.form())
-    print('\n')
-    print(await response.body())
+    form_data = await response.form()
+    print("FORM DATA:", dict(form_data))
+
+    # Проверяем типы
+    for key, value in form_data.items():
+        print(f"{key}: {value} (type: {type(value).__name__})")
     return
     payment = ...
     client_ip = response.client.host

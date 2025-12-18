@@ -13,4 +13,5 @@ aiohttp
 fastapi
 uvicorn
 yookassa-async
+python-multipart
 
