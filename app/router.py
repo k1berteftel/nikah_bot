@@ -32,7 +32,11 @@ router = APIRouter()
 
 
 @router.post("/payment")
-async def payment_notification(payment: PaymentNotification, response: Request):
+async def payment_notification(response: Request):
+    print(response.__dict__)
+    print(response.query_params)
+    return
+    payment = ...
     client_ip = response.client.host
     if client_ip not in ALLOWED_IPS:
         raise HTTPException(
