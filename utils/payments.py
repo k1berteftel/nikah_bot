@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import hashlib
 import random
 from urllib import parse
@@ -11,6 +12,9 @@ from yookassa.payment import PaymentResponse
 from utils.text_utils import get_form_text
 from database.action_data_class import DataInteraction
 from config_data.config import Config, load_config
+
+
+logger = logging.getLogger(__name__)
 
 
 config: Config = load_config()
@@ -70,7 +74,7 @@ def get_robokassa_url(
     }
 
 
-#print(get_robokassa_url(float(10), 8005178596, 683838))
+#print(get_robokassa_url(float(10), 8005178596, 599055))
 
 
 def check_signature_result(
@@ -81,6 +85,8 @@ def check_signature_result(
     order_id: str
 ) -> bool:
     signature = _calculate_signature(str(cost), str(inv_id), merchant_password_2, Shp_userId=user_id, Shp_orderId=order_id)
+    logger.info(f'received: {received_signature}')
+    logger.info(f'made: {signature}')
     if signature.lower() == received_signature.lower():
         return True
     return False
