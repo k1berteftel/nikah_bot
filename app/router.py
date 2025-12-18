@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 from pydantic import BaseModel
 from cachetools import TTLCache
@@ -9,6 +10,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from utils.process_payment import execute_rate
 from database.action_data_class import DataInteraction
 from utils.payments import check_signature_result
+
+
+logger = logging.getLogger(__name__)
 
 
 ALLOWED_IPS: list[str] = [
@@ -46,13 +50,16 @@ async def payment_notification(
     scheduler: AsyncIOScheduler = response.app.state.scheduler
     order_storage: TTLCache = response.app.state.order_storage
     if not check_signature_result(int(InvId), float(OutSum), SignatureValue, user_id=Shp_userId, order_id=Shp_orderId):
+        logger.info('bab signature')
         return "bad sign"
     answer = f'OK{InvId}'
     user_id = int(Shp_userId)
     order_id = int(Shp_orderId)
     order_data = order_storage.get(order_id)
     if not order_data:
+        logger.info('no order data in storage')
         return "old order"
     await execute_rate(user_id, bot, session, scheduler, order_data)
+    logger.info('success execute rate')
     return answer
 
