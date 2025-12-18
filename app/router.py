@@ -49,6 +49,8 @@ async def payment_notification(payment: PaymentNotification, response: Request):
     user_id = int(payment.Shp_userId)
     order_id = int(payment.Shp_orderId)
     order_data = order_storage.get(order_id)
+    if not order_data:
+        return "old order"
     await execute_rate(user_id, bot, session, scheduler, order_data)
     return answer
 
