@@ -81,7 +81,7 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
         if not order_id:
             order_id = random.randint(1, 999999)
             dialog_manager.dialog_data['order_id'] = order_id
-        print(price)
+        print(order_id)
         payment = get_robokassa_url(float(price), clb.from_user.id, order_id)
         dialog_manager.dialog_data['card_url'] = payment.get('url')
         print(payment.get('url'))
