@@ -74,17 +74,17 @@ def get_robokassa_url(
     }
 
 
-#print(get_robokassa_url(float(10), 8005178596, 599055))
+#print(get_robokassa_url(float(10), 8005178596, 388805))
 
 
 def check_signature_result(
-    inv_id: int,  # invoice number
-    cost: float,  # cost of goods, RU
+    inv_id: str,  # invoice number
+    cost: str,  # cost of goods, RU
     received_signature: hex,  # SignatureValue
     user_id: str,
     order_id: str
 ) -> bool:
-    signature = _calculate_signature(str(cost), str(inv_id), merchant_password_2, Shp_userId=user_id, Shp_orderId=order_id)
+    signature = _calculate_signature(cost, inv_id, merchant_password_2, Shp_userId=user_id, Shp_orderId=order_id)
     logger.info(f'received: {received_signature}')
     logger.info(f'made: {signature}')
     if signature.lower() == received_signature.lower():
