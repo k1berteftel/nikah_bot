@@ -43,7 +43,7 @@ async def payment_notification(payment: PaymentNotification, response: Request):
     session: DataInteraction = response.app.state.session
     scheduler: AsyncIOScheduler = response.app.state.scheduler
     order_storage: TTLCache = response.app.state.order_storage
-    if not check_signature_result(payment.InvId, payment.OutSum, PaymentNotification.SignatureValue):
+    if not check_signature_result(payment.InvId, payment.OutSum, payment.SignatureValue, user_id=payment.Shp_userId, order_id=payment.Shp_orderId):
         return "bad sign"
     answer = f'OK{payment.InvId}'
     user_id = int(payment.Shp_userId)
