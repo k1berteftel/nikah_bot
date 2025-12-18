@@ -70,7 +70,7 @@ def get_robokassa_url(
     }
 
 
-#print(get_robokassa_url(float(15), 8005178596, 173627))
+#print(get_robokassa_url(float(15), 8005178596, 8043))
 
 
 def check_signature_result(
