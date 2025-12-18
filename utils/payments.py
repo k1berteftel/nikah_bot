@@ -39,7 +39,7 @@ def _calculate_signature(out_sum: str, inv_id: str, password: str, **kwargs) -> 
 
     base_string = ":".join(base_parts)
     print(base_string)
-    return hashlib.md5(base_string.encode('utf-8')).hexdigest()
+    return hashlib.md5(base_string.encode('utf-8')).hexdigest().upper()
 
 
 def get_robokassa_url(
@@ -70,7 +70,7 @@ def get_robokassa_url(
     }
 
 
-#print(get_robokassa_url(float(15), 8005178596, 8043))
+#print(get_robokassa_url(float(10), 8005178596, 683838))
 
 
 def check_signature_result(
