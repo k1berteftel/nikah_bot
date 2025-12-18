@@ -1,4 +1,7 @@
 import asyncio
+import random
+
+from cachetools import TTLCache
 
 from aiogram.types import CallbackQuery, User, Message, InlineKeyboardButton, InlineKeyboardMarkup, LabeledPrice
 from aiogram.fsm.context import FSMContext
@@ -8,7 +11,7 @@ from aiogram_dialog.widgets.kbd import Button, Select
 from aiogram_dialog.widgets.input import ManagedTextInput
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from utils.payments import get_yookassa_url, get_oxa_payment_data
+from utils.payments import get_robokassa_url, get_oxa_payment_data
 from utils.process_payment import wait_for_payment
 from utils.text_utils import get_form_text
 from database.action_data_class import DataInteraction
@@ -69,27 +72,20 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
         dialog_manager.start_data.clear()
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     scheduler: AsyncIOScheduler = dialog_manager.middleware_data.get('scheduler')
+    order_storage: TTLCache = dialog_manager.middleware_data.get('order_storage')
     price = dialog_manager.dialog_data.get('price')
     rate = dialog_manager.dialog_data.get('rate')
     payment = clb.data.split('_')[0]
     if payment == 'card':
-        payment = await get_yookassa_url(price, rates[rate].get("description"))
-        task = asyncio.create_task(
-            wait_for_payment(
-                payment_id=payment.get('id'),
-                user_id=clb.from_user.id,
-                bot=clb.bot,
-                session=session,
-                scheduler=scheduler,
-                payment_type='card',
-                data=dialog_manager.dialog_data
-            )
-        )
-        for active_task in asyncio.all_tasks():
-            if active_task.get_name() == f'process_payment_{clb.from_user.id}':
-                active_task.cancel()
-        task.set_name(f'process_payment_{clb.from_user.id}')
+        order_id = dialog_manager.dialog_data.get('order_id')
+        if not order_id:
+            order_id = random.randint(1, 999999)
+            dialog_manager.dialog_data['order_id'] = order_id
+        print(price)
+        payment = get_robokassa_url(float(price), clb.from_user.id, order_id)
         dialog_manager.dialog_data['card_url'] = payment.get('url')
+        print(payment.get('url'))
+        order_storage[order_id] = dialog_manager.dialog_data
         await dialog_manager.switch_to(PaymentSG.card_payment)
         return
     elif payment == 'crypto':

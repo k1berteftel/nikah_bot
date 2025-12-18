@@ -6,7 +6,7 @@ from aiogram import Bot
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from utils.payments import check_yookassa_payment, check_oxa_payment
+from utils.payments import check_oxa_payment
 from database.action_data_class import DataInteraction
 from utils.text_utils import get_form_text
 from config_data.config import Config, load_config
@@ -24,7 +24,7 @@ async def wait_for_payment(
         session: DataInteraction,
         scheduler: AsyncIOScheduler,
         data: dict,
-        payment_type: Literal['card', 'crypto'],
+        payment_type: Literal['crypto'],
         timeout: int = 60 * 30,
         check_interval: int = 7
 ):
@@ -48,10 +48,10 @@ async def _poll_payment(payment_id: str, user_id: int, bot: Bot, session: DataIn
     Завершается, когда платёж оплачен.
     """
     while True:
-        if payment_type == 'card':
-            status = await check_yookassa_payment(payment_id)
-        else:
+        if payment_type == 'crypto':
             status = await check_oxa_payment(payment_id)
+        else:
+            status = False
         if status:
             await bot.send_message(
                 chat_id=user_id,

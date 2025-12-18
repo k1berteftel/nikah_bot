@@ -45,6 +45,13 @@ class Yookassa:
 
 
 @dataclass
+class Robokassa:
+    merchant_login: str
+    merchant_password_1: str
+    merchant_password_2: str
+
+
+@dataclass
 class OxaPay:
     api_key: str
 
@@ -58,6 +65,7 @@ class Config:
     private: Private
     yookassa: Yookassa
     oxapay: OxaPay
+    robokassa: Robokassa
 
 
 def load_config(path: str | None = None) -> Config:
@@ -92,5 +100,10 @@ def load_config(path: str | None = None) -> Config:
         ),
         oxapay=OxaPay(
             api_key=env('oxa_api_key')
+        ),
+        robokassa=Robokassa(
+            merchant_login=env('merchant_login'),
+            merchant_password_1=env('merchant_password_1'),
+            merchant_password_2=env('merchant_password_2')
         )
     )
