@@ -1,9 +1,9 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, validator
 from cachetools import TTLCache
 
 from aiogram import Bot
-from fastapi import APIRouter, Request, HTTPException, status
+from fastapi import APIRouter, Request, HTTPException, status, Depends
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from utils.process_payment import execute_rate
@@ -18,29 +18,100 @@ ALLOWED_IPS: list[str] = [
 
 
 class PaymentNotification(BaseModel):
-    OutSum: float
-    InvId: int
+    # Основные поля (с альтернативными именами)
+    OutSum: float = Field(alias='out_summ')  # Принимаем и out_summ и OutSum
+    InvId: int = Field(alias='inv_id')  # Принимаем и inv_id и InvId
     Fee: Optional[float] = None
     EMail: Optional[str] = None
-    SignatureValue: str
+    SignatureValue: str = Field(alias='crc')  # crc это SignatureValue
     PaymentMethod: str
     Shp_userId: str
     Shp_orderId: str
+
+    class Config:
+        # Разрешаем автоматическое создание из разных вариантов имен полей
+        allow_population_by_field_name = True
+        # Разрешаем передачу любых полей (лишние будут проигнорированы)
+        extra = 'ignore'
+
+    @validator('OutSum', 'InvId', 'Fee', pre=True)
+    def convert_string_to_number(cls, v):
+        """Конвертируем строки в числа"""
+        if v is None or v == '':
+            return None
+        if isinstance(v, str):
+            try:
+                # Убираем возможные пробелы
+                v = v.strip()
+                if '.' in v:
+                    return float(v)
+                else:
+                    return int(v)
+            except ValueError:
+                return v
+        return v
+
+
+# Альтернативный вариант, если нужно обрабатывать оба варианта имен полей:
+class PaymentNotificationFlex(BaseModel):
+    # Приоритет: если есть OutSum - используем его, иначе out_summ
+    OutSum: Optional[float] = None
+    InvId: Optional[int] = None
+
+    # Резервные поля (alias)
+    out_summ: Optional[float] = None
+    inv_id: Optional[int] = None
+
+    # Остальные поля
+    Fee: Optional[float] = None
+    EMail: Optional[str] = None
+    SignatureValue: Optional[str] = None
+    crc: Optional[str] = None  # Альтернативное имя для SignatureValue
+    PaymentMethod: str
+    Shp_userId: str
+    Shp_orderId: str
+
+    class Config:
+        extra = 'ignore'
+
+    @validator('OutSum', 'InvId', 'Fee', 'out_summ', 'inv_id', pre=True)
+    def convert_string_to_number(cls, v):
+        if v is None or v == '':
+            return None
+        if isinstance(v, str):
+            try:
+                return float(v) if '.' in v else int(v)
+            except ValueError:
+                return v
+        return v
+
+    @validator('SignatureValue', always=True)
+    def set_signature_value(cls, v, values):
+        """Берем SignatureValue из crc если основной поле не задано"""
+        if v is None and 'crc' in values:
+            return values['crc']
+        return v
+
+    @validator('OutSum', always=True)
+    def set_outsum(cls, v, values):
+        """Берем OutSum из out_summ если основной поле не задано"""
+        if v is None and 'out_summ' in values:
+            return values['out_summ']
+        return v
+
+    @validator('InvId', always=True)
+    def set_invid(cls, v, values):
+        """Берем InvId из inv_id если основной поле не задано"""
+        if v is None and 'inv_id' in values:
+            return values['inv_id']
+        return v
 
 
 router = APIRouter()
 
 
 @router.post("/payment")
-async def payment_notification(response: Request):
-    form_data = await response.form()
-    print("FORM DATA:", dict(form_data))
-
-    # Проверяем типы
-    for key, value in form_data.items():
-        print(f"{key}: {value} (type: {type(value).__name__})")
-    return
-    payment = ...
+async def payment_notification(response: Request, payment: PaymentNotification = Depends()):
     client_ip = response.client.host
     if client_ip not in ALLOWED_IPS:
         raise HTTPException(
