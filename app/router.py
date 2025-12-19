@@ -58,8 +58,24 @@ async def payment_notification(
     order_data = order_storage.get(order_id)
     if not order_data:
         logger.info('no order data in storage')
+        try:
+            await bot.send_message(
+                chat_id=user_id,
+                text='🚨Ваш платеж уже <b>просрочился</b>, чтобы решить проблему пожалуйста обратитесь к админу: @Glav_admin_nikaha'
+            )
+        except Exception:
+            await session.set_active(user_id, 0)
         return "old order"
-    await execute_rate(user_id, bot, session, scheduler, order_data)
+    try:
+        await execute_rate(user_id, bot, session, scheduler, order_data)
+    except Exception:
+        try:
+            await bot.send_message(
+                chat_id=user_id,
+                text='🚨<b>При обработке платежа произошла какая-то ошибка</b>, чтобы решить проблему пожалуйста обратитесь к админу: @Glav_admin_nikaha'
+            )
+        except Exception:
+            await session.set_active(user_id, 0)
     logger.info('success execute rate')
     return answer
 
